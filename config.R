@@ -1,5 +1,6 @@
 library(here)
 library(dotenv)
+library(dplyr)
 
 # Get password from.env
 # TODO: insert important info & change password in .env
