@@ -1,10 +1,3 @@
-library(here)
-library(sf)
-
-wind_points <- st_read(here("data","input", "Windkraftanlagen DE - Windkraftanlagen 2023", "Windkraftanlagen DE - Windkraftanlagen 2023.shp"))
-plot(wind_points)
-
-deu <- st_read(here("data","input", "gadm41_DEU_shp", "gadm41_DEU_2.shp"))
-plot(deu)
-
-rm(x)
+version https://git-lfs.github.com/spec/v1
+oid sha256:aa89975b749051fde257790f90a56e95a9097f3a694c42739b50cc8021d9831d
+size 1905
