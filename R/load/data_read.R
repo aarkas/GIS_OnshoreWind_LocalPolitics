@@ -61,7 +61,7 @@ election_2021 <- read.csv2(
 
 ## RASTER DATA
 
-# land use raster for germany (2021)
+# land use raster for Germany (2021)
 land_use <- rast(here(
   "data",
   "input",
