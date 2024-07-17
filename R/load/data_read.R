@@ -7,7 +7,10 @@ library(terra)
 library(ncdf4)
 library(readxl)
 
-## VECTOR DATA
+
+# ---------------------------------------------------------
+# VECTOR DATA
+# ---------------------------------------------------------
 
 # wind farms as point layer
 wind_points_old <- st_read(
@@ -23,7 +26,7 @@ plot(wind_points_old)
 
 # wind farm database with more recent data
 wind_points <- read_excel(here("data", "input", "Global-Wind-Power-Tracker-June-2024.xlsx"),
-                           sheet = "Data")
+                          sheet = "Data")
 
 # Germany ...TODO: Which level do I want Germany shp?
 deu <- st_read(here("data", "input", "gadm41_DEU_shp", "gadm41_DEU_2.shp"))
@@ -59,7 +62,9 @@ election_2021 <- read.csv2(
 )
 
 
-## RASTER DATA
+# ---------------------------------------------------------
+# RASTER DATA
+# ---------------------------------------------------------
 
 # land use raster for Germany (2021)
 land_use <- rast(here(
