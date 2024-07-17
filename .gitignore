@@ -1,3 +1,48 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9b18018699d22432152db1bd0878cc834da6840693b68b0c829f92fbb38940b4
-size 564
+notes
+
+# Exclude output
+output/
+
+# MacOS files
+.DS_Store
+
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# R Environment Variables
+.env
+.Renviron
+
+# pkgdown site
+docs/
+
+# RStudio Connect folder
+rsconnect/
