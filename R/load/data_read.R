@@ -78,6 +78,14 @@ print(land_use)
 plot(land_use)
 
 # wind speed projected mean for near future (2021 - 2050) project by TU Dresden
-wind_speed_mean <- nc_open(here("data", "input", "raster", "fu_ff_mean_year_201902280000_l140.nc"))
+wind_speed_mean <- rast(here(
+  "data",
+  "input",
+  "raster",
+  "fu_ff_mean_year_201902280000_l140.nc"
+))
 
-print(wind_speed_mean)
+ext(wind_speed_mean)
+res(wind_speed_mean)
+st_crs(wind_speed_mean)
+plot(wind_speed_mean)

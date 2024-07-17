@@ -62,7 +62,7 @@ ggplot() +
   labs(title = "Onshore Wind Farms Germany", x = "Longitude", y = "Latitude") +
   theme(plot.title = element_text(hjust = 0.5))
 
-subset <- wind_points_sf[wind_points_sf$`Start year`>=2014, ]
+subset <- wind_points_sf[wind_points_sf$`Start year` >= 2014, ]
 
 
 # ---------------------------------------------------------
@@ -85,18 +85,21 @@ election_mp <- election_mp %>%
 
 election_mp <- election_mp %>%
   rowwise() %>%
-  mutate(
-    Strongest_party = if (all(is.na(c_across(c(Union, SPD, Linke, AfD, FDP, Grüne))))) {
-      "No Data"
-    } else {
-      party_names <- c("Union", "SPD", "Linke", "AfD", "FDP", "Grüne")
-      party_names[which.max(c_across(c(Union, SPD, Linke, AfD, FDP, Grüne)))]
-    }
-  ) %>%
+  mutate(Strongest_party = if (all(is.na(c_across(
+    c(Union, SPD, Linke, AfD, FDP, Grüne)
+  )))) {
+    "No Data"
+  } else {
+    party_names <- c("Union", "SPD", "Linke", "AfD", "FDP", "Grüne")
+    party_names[which.max(c_across(c(Union, SPD, Linke, AfD, FDP, Grüne)))]
+  }) %>%
   ungroup()
 
 # factor Strongest_party for legend order
-election_mp$Strongest_party <- factor(election_mp$Strongest_party, levels = c("Union", "SPD", "Linke", "AfD", "Grüne", "FDP", "No Data"))
+election_mp$Strongest_party <- factor(
+  election_mp$Strongest_party,
+  levels = c("Union", "SPD", "Linke", "AfD", "Grüne", "FDP", "No Data")
+)
 
 
 ggplot() +
@@ -112,10 +115,9 @@ ggplot() +
       "No Data" = "grey"
     )
   ) +
-  theme_minimal() + 
-  labs(title = "Election Results by Municipality (2021)", x = "Longitude", y = "Latitude", fill = "") +
+  theme_minimal() +
+  labs(title = "Election Results by Municipality (2021)",
+       x = "Longitude",
+       y = "Latitude",
+       fill = "") +
   theme(plot.title = element_text(hjust = 0.5))
-
-
-
-# checken ob es sinn macht zu rasterizieren
