@@ -77,9 +77,7 @@ st_crs(land_use)
 print(land_use)
 plot(land_use)
 
-# wind speed monthly average for January, April, July & October (2012)
-wind_speed_jan <- nc_open(here("data", "input", "raster", "FF_201201_monmean.nc"))
-wind_speed_april <- nc_open(here("data", "input", "raster", "FF_201204_monmean.nc"))
-wind_speed_july <- nc_open(here("data", "input", "raster", "FF_201207_monmean.nc"))
-wind_speed_oct <- nc_open(here("data", "input", "raster", "FF_201210_monmean.nc"))
-print(wind_speed_jan)
+# wind speed projected mean for near future (2021 - 2050) project by TU Dresden
+wind_speed_mean <- nc_open(here("data", "input", "raster", "fu_ff_mean_year_201902280000_l140.nc"))
+
+print(wind_speed_mean)
