@@ -1,5 +1,7 @@
 notes
 
+data/input/raster/
+
 # Exclude output
 output/
 
