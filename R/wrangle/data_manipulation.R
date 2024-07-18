@@ -53,6 +53,8 @@ str(wind_points_sf)
 # factor Status for visualization
 wind_points_sf$Status <- factor(wind_points_sf$Status)
 
+subset <- wind_points_sf[wind_points_sf$`Start year` >= 2014, ]
+
 # visualize with Status as Fill and Capacity as Size
 ggplot() +
   geom_sf(data = deu) +
@@ -61,8 +63,6 @@ ggplot() +
   theme_minimal() +
   labs(title = "Onshore Wind Farms Germany", x = "Longitude", y = "Latitude") +
   theme(plot.title = element_text(hjust = 0.5))
-
-subset <- wind_points_sf[wind_points_sf$`Start year` >= 2014, ]
 
 
 # ---------------------------------------------------------

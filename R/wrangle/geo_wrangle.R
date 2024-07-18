@@ -1,29 +1,84 @@
 library(here)
+library(sf)
+library(terra)
+library(raster)
+library(ncdf4)
+library(dplyr)
 
 # load data from data_manipulation.R
 here("R/wrangle/data_manipulation.R") |> source()
 
 # ---------------------------------------------------------
-# RASTERS
+# RASTER PROJECTION
 # ---------------------------------------------------------
 
-crs_layer1 <- crs(land_use)
-crs_layer2 <- crs(wind_speed_mean)
+# set original crs for wind_speed_mean
+crs(wind_speed_mean) <- 'EPSG: 3035'
 
-# Print the CRS of both layers
-print(crs_layer1)
-print(crs_layer2)
+# define projection
+projection <- "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
 
-# Check if they are the same
-if (crs_layer1 == crs_layer2) {
-  print("CRS of both layers are the same.")
-} else {
-  print("CRS of the layers are different.")
-}
+# check Resolution, Extent and CRS
+res(wind_speed_mean)
+res(land_use)
 
-wind_speed_mean <- project(wind_speed_mean, crs(land_use) )
+ext(wind_speed_mean)
+ext(land_use)
+
 crs(wind_speed_mean)
+crs(land_use)
+crs(wind_points_sf)
+crs(election_mp)
 
+# reduce resolution to fasten projection for land_use --> project 
+land_use_resampled <- aggregate(land_use, fact=10)
+land_use <- project(land_use_resampled, "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+
+# project wind_speed_mean
+wind_speed_mean <- project(wind_speed_mean, "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+
+# ---------------------------------------------------------
+# RASTER RESAMPLE & COMBINE
+# ---------------------------------------------------------
+
+# resample
+wind_speed_mean <- terra::resample(wind_speed_mean, land_use, method="bilinear")
+
+# take first layer from wind_speed_mean
+wind_speed <- wind_speed_mean[[1]]
+
+# condition that wind speed must be at least 7.5 m/s at hub height
+wind_speed_condition <- wind_speed >=7
+plot(wind_speed_condition)
+
+# condition that just takes eligible land for placing wind turbines (low vegetation & bare soil)
+land_use_condition <- land_use >=15 & land_use <=25 | land_use >=45 & land_use <=57.5
+plot(land_use_condition)
+
+aggregated_layer <- wind_speed_condition & land_use_condition
+
+plot(aggregated_layer)
+
+#
+# land_use_factor <- land_use
+# is.factor(land_use_factor)
+# 
+# levels(land_use_factor) <- c(10:15,25:35,35:45,45:55,55:60)
+# data.frame(id = c(10:15,20,30,40,50,60), cover = c("Forest", "Low Veg", "Water", "Built-Up", "Bare Soil", "Agriculture"))
+# 
+# land_use_condition <- land_use_factor == 25
+# plot(land_use_condition)
+# 
+# cats(land_use_factor)
+# cats()
+
+
+# Plots
 
 plot(land_use)
-plot(wind_speed_mean, add = TRUE, col = "red")
+plot(wind_speed_mean, add=T)
+
+terra::plot(land_use)
+terra::plot(wind_speed_mean$FF)
+
+
