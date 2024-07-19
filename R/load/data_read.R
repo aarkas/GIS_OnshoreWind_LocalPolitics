@@ -32,7 +32,8 @@ wind_points <- read_excel(here("data", "input", "Global-Wind-Power-Tracker-June-
 districts <- st_read(here("data", "input", "gadm41_DEU_shp", "gadm41_DEU_2.shp"))
 st_crs(districts)
 ggplot() +
-  geom_sf(data = districts) +
+  geom_sf(data = municipalities_overlay) +
+  geom_sf(data = districts, col='red') +
   theme_minimal()
 
 # municipalities for the 2021 federal election
@@ -59,7 +60,6 @@ election_2021 <- read.csv2(
   ),
   sep = ','
 )
-
 
 # ---------------------------------------------------------
 # RASTER DATA
