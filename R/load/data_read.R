@@ -33,8 +33,8 @@ deu <- st_read(here("data", "input", "gadm41_DEU_shp", "gadm41_DEU_2.shp"))
 st_crs(deu)
 ggplot() +
   geom_sf(data = deu) +
-  geom_sf(data = wind_points_old, aes(color = 'red'))
-theme_minimal()
+  #geom_sf(data = wind_points, aes(color = 'red')) +
+  theme_minimal()
 
 # municipalities for the 2021 federal election
 municipality <- st_read(

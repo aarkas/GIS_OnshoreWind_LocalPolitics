@@ -27,8 +27,6 @@ ext(land_use)
 
 crs(wind_speed_mean)
 crs(land_use)
-crs(wind_points_sf)
-crs(election_mp)
 
 # reduce resolution to fasten projection for land_use --> project 
 land_use_resampled <- aggregate(land_use, fact=10)
@@ -41,7 +39,7 @@ wind_speed_mean <- project(wind_speed_mean, "+proj=longlat +datum=WGS84 +ellps=W
 # RASTER RESAMPLE & COMBINE
 # ---------------------------------------------------------
 
-# resample
+# resample wind_speed_mean to match land_use
 wind_speed_mean <- terra::resample(wind_speed_mean, land_use, method="bilinear")
 
 # take first layer from wind_speed_mean
@@ -51,34 +49,36 @@ wind_speed <- wind_speed_mean[[1]]
 wind_speed_condition <- wind_speed >=7
 plot(wind_speed_condition)
 
+# recreate categories that land-use has (10,20,30,40,50,60)
+reclass_matrix <- matrix(c(
+  10, 15, 10,
+  15, 25, 20,
+  25, 35, 30,
+  35, 45, 40,
+  45, 55, 50,
+  55, 60, 60
+), ncol = 3, byrow = TRUE)
+
+land_use <- classify(land_use, reclass_matrix)
+category_labels <- data.frame(id = c(10, 20, 30, 40, 50, 60),
+                              category = c("Forest", "Low Vegetation", "Water", 
+                                           "Built-Up", "Bare Soil", "Agriculture"))
+levels(land_use) <- category_labels
+
 # condition that just takes eligible land for placing wind turbines (low vegetation & bare soil)
-land_use_condition <- land_use >=15 & land_use <=25 | land_use >=45 & land_use <=57.5
+land_use_condition <- land_use == 20 | land_use == 50
 plot(land_use_condition)
 
+# laying both conditions over each other
 aggregated_layer <- wind_speed_condition & land_use_condition
-
 plot(aggregated_layer)
 
-#
-# land_use_factor <- land_use
-# is.factor(land_use_factor)
-# 
-# levels(land_use_factor) <- c(10:15,25:35,35:45,45:55,55:60)
-# data.frame(id = c(10:15,20,30,40,50,60), cover = c("Forest", "Low Veg", "Water", "Built-Up", "Bare Soil", "Agriculture"))
-# 
-# land_use_condition <- land_use_factor == 25
-# plot(land_use_condition)
-# 
-# cats(land_use_factor)
-# cats()
 
+# ---------------------------------------------------------
+# SET VECTOR CRS
+# ---------------------------------------------------------
 
-# Plots
+st_crs(wind_points_sf) #already matching CRS
+st_crs(election_mp)
 
-plot(land_use)
-plot(wind_speed_mean, add=T)
-
-terra::plot(land_use)
-terra::plot(wind_speed_mean$FF)
-
-
+election_mp <- st_set_crs(election_mp, projection)
