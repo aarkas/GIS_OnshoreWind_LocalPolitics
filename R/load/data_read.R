@@ -13,31 +13,30 @@ library(readxl)
 # ---------------------------------------------------------
 
 # wind farms as point layer
-wind_points_old <- st_read(
-  here(
-    "data",
-    "input",
-    "Windkraftanlagen DE - Windkraftanlagen 2023",
-    "Windkraftanlagen DE - Windkraftanlagen 2023.shp"
-  )
-)
-st_crs(wind_points_old)
-plot(wind_points_old)
+# wind_points_old <- st_read(
+#   here(
+#     "data",
+#     "input",
+#     "Windkraftanlagen DE - Windkraftanlagen 2023",
+#     "Windkraftanlagen DE - Windkraftanlagen 2023.shp"
+#   )
+# )
+# st_crs(wind_points_old)
+# plot(wind_points_old)
 
 # wind farm database with more recent data
 wind_points <- read_excel(here("data", "input", "Global-Wind-Power-Tracker-June-2024.xlsx"),
                           sheet = "Data")
 
 # Germany ...TODO: Which level do I want Germany shp?
-deu <- st_read(here("data", "input", "gadm41_DEU_shp", "gadm41_DEU_2.shp"))
-st_crs(deu)
+districts <- st_read(here("data", "input", "gadm41_DEU_shp", "gadm41_DEU_2.shp"))
+st_crs(districts)
 ggplot() +
-  geom_sf(data = deu) +
-  #geom_sf(data = wind_points, aes(color = 'red')) +
+  geom_sf(data = districts) +
   theme_minimal()
 
 # municipalities for the 2021 federal election
-municipality <- st_read(
+municipalities <- st_read(
   here(
     "data",
     "input",
@@ -45,9 +44,9 @@ municipality <- st_read(
     "2021-bundestagswahl-gemeinden.shp"
   )
 )
-st_crs(municipality)
+st_crs(municipalities)
 ggplot() +
-  geom_sf(data = municipality) +
+  geom_sf(data = municipalities) +
   theme_minimal()
 
 # federal election 2021 results

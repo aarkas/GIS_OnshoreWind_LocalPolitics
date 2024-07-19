@@ -1,0 +1,11 @@
+---
+title: 'XXX'
+output: pdf_document
+date: "2024-07-19"
+---
+
+### Introduction
+
+- part of the energy transition strategy in Germany to reach the mandatory climate goals and reduce emission - is the increased construction of onshore wind farms as they area carbon neutral and have a fairly low LCOE (Levelized Cost of Energy)
+- though with the growing support for right-wing parties and a strengthening of the conservative midddle, one could question how that impacts the ongoing integration of renewables. Many of the voters doubt the existence of the anthropogene climate change and therefore dont necessarily see a need in the building of renewables. Especially towards onshore wind energy a significant rejection is noticeable.
+Thats why this project work aims to examine if theres an actualy correlation between voter behaviour taken as a metric for reflecting the political orientaion and  the actual existence and construction of wind farms in the respective districts

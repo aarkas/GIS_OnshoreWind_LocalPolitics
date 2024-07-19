@@ -10,6 +10,9 @@ here("R/load/data_read.R") |> source()
 # WIND FARM POINTS
 # ---------------------------------------------------------
 
+# districts & municipalities to sf
+
+
 # filter and clean wind_points
 wind_points <- wind_points %>%
   filter(
@@ -53,12 +56,12 @@ str(wind_points_sf)
 # factor Status for visualization
 wind_points_sf$Status <- factor(wind_points_sf$Status)
 
-subset <- wind_points_sf[wind_points_sf$`Start year` >= 2014, ]
+subset <- wind_points_sf[wind_points_sf$`Start year` >= 2010, ]
 
 # visualize with Status as Fill and Capacity as Size
 ggplot() +
-  geom_sf(data = deu) +
-  geom_sf(data = subset, aes(color = Status, size = `Capacity (MW)`)) +
+  geom_sf(data = districts) +
+  geom_sf(data = wind_points_sf, aes(color = Status, size = `Capacity (MW)`)) +
   scale_size_continuous(range = c(0.1, 2.5)) +
   theme_minimal() +
   labs(title = "Onshore Wind Farms Germany", x = "Longitude", y = "Latitude") +
@@ -70,10 +73,10 @@ ggplot() +
 # ---------------------------------------------------------
 
 # join election municipalities with election results
-str(municipality)
+str(municipalities)
 str(election_2021)
 election_2021$AGS <- as.character(election_2021$AGS)
-election_mp <- municipality %>%
+election_mp <- municipalities %>%
   left_join(election_2021, by = "AGS") %>%
   rename(Municipality = GEN, `Valid votes` = Gültige) %>%
   select(AGS, Municipality, everything()) %>%
@@ -103,7 +106,8 @@ election_mp$Strongest_party <- factor(
 
 
 ggplot() +
-  geom_sf(data = election_mp, aes(fill = Strongest_party)) +
+  geom_sf(data = districts) +
+  geom_sf(data = election_mp, aes(fill = Strongest_party), lwd=0) +
   scale_fill_manual(
     values = c(
       "Union" = "black",
