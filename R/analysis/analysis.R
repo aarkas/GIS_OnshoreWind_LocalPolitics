@@ -2,6 +2,9 @@ library(sf)
 library(terra)
 library(dplyr)
 library(exactextractr)
+library(nnet)
+library(tidyr)
+library(ggplot2)
 
 here("R/wrangle/geo_wrangle.R") |> source()
 
@@ -82,10 +85,41 @@ district_analysis <- st_sf(district_analysis, sf_column_name = "geometry.x")
 # CORRELATION
 # ---------------------------------------------------------
 
-correlation_result <- cor(district_analysis$Strongest_party, district_analysis$count)
+district_analysis <- district_analysis %>%
+  mutate(party_code = as.numeric(factor(Strongest_party)))
 
+model <- lm(party_code ~ count, data = district_analysis)
+summary(model)
 
+ggplot(district_analysis, aes(x = count, y = party_code)) +
+  geom_point(aes(color = Strongest_party), alpha = 0.6) +
+  geom_smooth(method = "lm",
+              se = FALSE,
+              color = "blue") +
+  labs(x = "Count of Wind Farms", y = "Coded Strongest Party", title = "Relationship between Wind Farms and Party Strength") +
+  theme_minimal()
 
-ggplot() +
-  geom_sf(data = wind_points_sf, aes(color = Status)) +
-  geom_sf(data = district_analysis, aes(fill = Strongest_party))
+multinom_model <- multinom(Strongest_party ~ count, data = district_analysis)
+
+summary(multinom_model)
+
+new_data <- data.frame(count = unique(district_analysis$count))
+predicted_probs <- predict(multinom_model, newdata = new_data, type = "probs")
+
+# Convert probabilities to a dataframe
+probs_df <- as.data.frame(predicted_probs)
+probs_df$count <- new_data$count
+
+# Transform to long format for ggplot
+plot_data <- tidyr::pivot_longer(
+  probs_df,
+  cols = -count,
+  names_to = "Party",
+  values_to = "Probability"
+)
+
+ggplot(plot_data, aes(x = count, y = Probability, color = Party)) +
+  geom_line() +
+  labs(title = "Probability of Each Party Being Strongest vs. Count of Wind Farms", x = "Count of Wind Farms", y = "Probability") +
+  theme_minimal()
+

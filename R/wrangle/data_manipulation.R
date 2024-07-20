@@ -106,7 +106,7 @@ election_mp$Strongest_party <- factor(
 
 
 ggplot() +
-  geom_sf(data = districts) +
+  geom_sf(data = municipalities) +
   geom_sf(data = election_mp, aes(fill = Strongest_party), lwd=0) +
   scale_fill_manual(
     values = c(
