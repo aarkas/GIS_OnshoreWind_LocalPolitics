@@ -1,6 +1,8 @@
 ---
 title: 'Is the expansion of onshore wind energy influenced by political developments?'
 output: pdf_document
+    self_contained: true
+    output_dir: 'data/output'
 date: "2024-07-19"
 ---
 
@@ -9,13 +11,15 @@ date: "2024-07-19"
 Part of Germany's energy transition strategy to meet mandatory climate targets and reduce carbon emissions is to increase the construction of onshore wind farms, as they are carbon neutral and have a relatively low levelized cost of energy (LCOE). However, with growing support for right-wing parties and a strengthening of the conservative middle, one might wonder how this will affect the continued integration of renewables. Many people doubt the existence of anthropogenic climate change and therefore do not necessarily see the need to build renewables. In particular, there is significant opposition to the construction of onshore wind farms. Therefore, the aim of this project is to investigate whether there is an actual correlation between recent election results at the municipal level, taken as a measure of political orientation, and the existence and construction of wind farms in the respective districts.
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE)
 
 library(here)
 library(ggplot2)
 library(dplyr)
 
 here::i_am("report/Final_Report.Rmd")
-here("R/analysis/analysis") |> source()
+
+here("R/analysis/analysis.R") |> source()
 
 ```
 
@@ -36,6 +40,8 @@ ggplot() +
   theme_minimal() +
   labs(title = "Onshore Wind Farms Germany", x = "Longitude", y = "Latitude") +
   theme(plot.title = element_text(hjust = 0.5))
+
+head(wind_points_sf)
   
 ```
 
@@ -76,6 +82,8 @@ ggplot() +
        fill = "") +
   theme(plot.title = element_text(hjust = 0.5))
 
+head(election_mp)
+
 ```
 
 The main reason for using 2021 federal election data is the different timeframe for regional elections, which would have made comparisons difficult.
@@ -88,15 +96,16 @@ Overlaying the two conditional raster produces this result, with the TRUE-valued
 
 plot(aggregated_layer)
 
-
 ```
-## Analysis 
 
-The combined logical raster is now being used to subset the districts vector. Hereby it is presumed that at least 10% of the district area must be considered usable for the district to be included in further analysis. 
+## Analysis
 
-As the original plan to look at the wind farm distribution at municipal level was discarded due to a lack of wind farm points, the election results are aggregated up to district level instead. The same reasoning applies to the use of all wind farm points. Due to the use of election results from 2021, it would have made more sense to only consider wind farms that were built in the period after that. However, the analysis would be much more difficult due to a lack of data points. 
+The combined logical raster is now being used to subset the districts vector. Hereby it is presumed that at least 10% of the district area must be considered usable for the district to be included in further analysis.
 
-In the final step, two regression / correlation methods are applied to the final results. A basic histogram overview shows that the SPD has the highest average number of wind farms in the respective districts. 
+As the original plan to look at the wind farm distribution at municipal level was discarded due to a lack of wind farm points, the election results are aggregated up to district level instead. The same reasoning applies to the use of all wind farm points. Due to the use of election results from 2021, it would have made more sense to only consider wind farms that were built in the period after that. However, the analysis would be much more difficult due to a lack of data points.
+
+In the final step, two regression / correlation methods are applied to the final results. A basic histogram overview shows that the SPD has the highest average number of wind farms in the respective districts.
+
 ```{r hist, include=FALSE}
 average_windfarms <- district_analysis %>%
   group_by(Strongest_party) %>%
@@ -114,8 +123,8 @@ ggplot(average_windfarms, aes(x = Strongest_party, y = Average_WindFarms, fill =
 
 
 ```
-As the analysis is carried out with one categorical and one numerical variable, a linear regression model seems rather impractical. Thats why in a second step a multinomial Log-linear model is utilized. 
-The results by both models suggest a weak positive correlation between the presence of wind farms and the likelihood of the SPD becoming the largest party, less so for the AfD and even less so for the Grüne. Implying a significant uncertainty about the impact of wind farms on political dominance. Given the low R-squared values (0.01524), the explanatory power of the model is limited, therefore additional variables would be better suited to explain variations. The p-value of 0.0531 suggests a hint of a positive relationship, but more data and in-depth analyis would be necessary. 
+
+As the analysis is carried out with one categorical and one numerical variable, a linear regression model seems rather impractical. Thats why in a second step a multinomial Log-linear model is utilized. The results by both models suggest a weak positive correlation between the presence of wind farms and the likelihood of the SPD becoming the largest party, less so for the AfD and even less so for the Grüne. Implying a significant uncertainty about the impact of wind farms on political dominance. Given the low R-squared values (0.01524), the explanatory power of the model is limited, therefore additional variables would be better suited to explain variations. The p-value of 0.0531 suggests a hint of a positive relationship, but more data and in-depth analyis would be necessary.
 
 ```{r model, include=FALSE}
 
@@ -129,4 +138,4 @@ ggplot(plot_data, aes(x = count, y = Probability, color = Party)) +
 
 ## Conclusion
 
-In summary, the very comprehensive approach and methodology of this project leaves much room for further research. However, no meaningful conclusion could be drawn here because the analysis was relatively narrow compared to the data processing. The results are only minimally significant and more data and more variables would be needed to make more substantive statements. Besides, to assess the influence of the political variable, more than just the strongest party in each district would have to be taken into account. With a more detailed use of wind speeds, and possibly considering the power capacity of the wind turbines, it would also be possible to develop a more detailed metric. so there is still a lot of room for this topic. 
+In summary, the very comprehensive approach and methodology of this project leaves much room for further research. However, no meaningful conclusion could be drawn here because the analysis was relatively narrow compared to the data processing. The results are only minimally significant and more data and more variables would be needed to make more substantive statements. Besides, to assess the influence of the political variable, more than just the strongest party in each district would have to be taken into account. With a more detailed use of wind speeds, and possibly considering the power capacity of the wind turbines, it would also be possible to develop a more detailed metric. so there is still a lot of room for this topic.

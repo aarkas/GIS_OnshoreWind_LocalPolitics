@@ -1,9 +1,8 @@
+# Exclude notes
 notes
 
+# Exclude input raster because of size
 data/input/raster/
-
-# Exclude output
-output/
 
 # MacOS files
 .DS_Store
