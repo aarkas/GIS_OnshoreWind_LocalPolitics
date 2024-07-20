@@ -23,7 +23,7 @@ wind_points <- wind_points %>%
 
 # drop non-important columns
 wind_points <- wind_points %>%
-  select(
+  dplyr::select(
     `Date Last Researched`,
     `Country/Area`,
     `Project Name`,
@@ -40,11 +40,11 @@ wind_points <- wind_points %>%
     `State/Province`
   )
 
-# check for obvious duplicates
-duplicates <- apply(wind_points, 1, function(row) {
-  sum(duplicated(row)) >= 5
-})
-print(wind_points[duplicates, ])
+# # check for obvious duplicates
+# duplicates <- apply(wind_points, 1, function(row) {
+#   sum(duplicated(row)) >= 5
+# })
+# print(wind_points[duplicates, ])
 
 
 # create point layer out of wind farm data
@@ -77,18 +77,18 @@ str(municipalities)
 str(election_2021)
 election_2021$AGS <- as.character(election_2021$AGS)
 election_mp <- municipalities %>%
-  left_join(election_2021, by = "AGS") %>%
-  rename(Municipality = GEN, `Valid votes` = Gültige) %>%
-  select(AGS, Municipality, everything()) %>%
-  arrange(AGS)
+  dplyr::left_join(election_2021, by = "AGS") %>%
+  dplyr::rename(Municipality = GEN, `Valid votes` = Gültige) %>%
+  dplyr::select(AGS, Municipality, everything()) %>%
+  dplyr::arrange(AGS)
 
 # convert election results to numeric & determine strongest party for every municipality
 election_mp <- election_mp %>%
-  mutate(across(c(Union, SPD, Linke, AfD, FDP, Grüne, Sonstige), as.numeric))
+  dplyr::mutate(across(c(Union, SPD, Linke, AfD, FDP, Grüne, Sonstige), as.numeric))
 
 election_mp <- election_mp %>%
-  rowwise() %>%
-  mutate(Strongest_party = if (all(is.na(c_across(
+  dplyr::rowwise() %>%
+  dplyr::mutate(Strongest_party = if (all(is.na(c_across(
     c(Union, SPD, Linke, AfD, FDP, Grüne)
   )))) {
     "No Data"
@@ -96,7 +96,7 @@ election_mp <- election_mp %>%
     party_names <- c("Union", "SPD", "Linke", "AfD", "FDP", "Grüne")
     party_names[which.max(c_across(c(Union, SPD, Linke, AfD, FDP, Grüne)))]
   }) %>%
-  ungroup()
+  dplyr::ungroup()
 
 # factor Strongest_party for legend order
 election_mp$Strongest_party <- factor(

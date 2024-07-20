@@ -16,10 +16,21 @@ knitr::opts_chunk$set(cache = TRUE)
 library(here)
 library(ggplot2)
 library(dplyr)
-
-here::i_am("report/Final_Report.Rmd")
+library(sf)
+library(sp)
+library(raster)
+library(terra)
+library(ncdf4)
+library(readxl)
+library(ncdf4)
+library(exactextractr)
+library(nnet)
+library(tidyr)
+library(broom)
 
 here("R/analysis/analysis.R") |> source()
+
+here::i_am("report/Final_Report.Rmd")
 
 ```
 

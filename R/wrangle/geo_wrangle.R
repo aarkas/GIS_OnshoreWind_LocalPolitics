@@ -51,6 +51,8 @@ land_use_resampled <- aggregate(land_use, fact = 10, fun = modal)
 # project land_use using "near"-method to maintain classification
 land_use <- project(land_use_resampled, projection, method = "near")
 
+levels(land_use) <- land_use_mapping
+
 # project wind_speed_mean
 wind_speed_mean <- project(wind_speed_mean, projection)
 
