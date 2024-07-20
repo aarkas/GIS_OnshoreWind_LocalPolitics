@@ -5,6 +5,7 @@ library(exactextractr)
 library(nnet)
 library(tidyr)
 library(ggplot2)
+library(broom)
 
 here("R/wrangle/geo_wrangle.R") |> source()
 
@@ -13,8 +14,8 @@ here("R/wrangle/geo_wrangle.R") |> source()
 # ---------------------------------------------------------
 
 # calculate proportion of district where the aggregated layer is TRUE (land is considered eligible)
-crs(aggregated_layer) <- crs(districts)
-ext(aggregated_layer) <- ext(districts)
+st_crs(districts) <- crs(aggregated_layer)
+#ext(aggregated_layer) <- ext(districts)
 
 district_true <- crop(aggregated_layer, districts)
 plot(district_true)
@@ -46,7 +47,7 @@ suitable_districts <- districts[districts$true_proportion >= 0.1, ]
 st_crs(suitable_districts) <- st_crs(election_mp)
 
 intersections <- st_intersection(election_mp, suitable_districts) %>%
-  mutate(area = st_area(.))
+  mutate(area = st_area(.)) #takes a couple minutes
 
 largest_intersections <- intersections %>%
   group_by(AGS) %>%
@@ -90,6 +91,8 @@ district_analysis <- district_analysis %>%
 
 model <- lm(party_code ~ count, data = district_analysis)
 summary(model)
+broom_model <- tidy(model)
+print(broom_model)
 
 ggplot(district_analysis, aes(x = count, y = party_code)) +
   geom_point(aes(color = Strongest_party), alpha = 0.6) +

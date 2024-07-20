@@ -133,7 +133,7 @@ ggplot(plot_data, aes(x = count, y = Probability, color = Party)) +
   labs(title = "Probability of Each Party Being Strongest vs. Count of Wind Farms", x = "Count of Wind Farms", y = "Probability") +
   theme_minimal()
 
-
+print(broom_model)
 ```
 
 ## Conclusion
