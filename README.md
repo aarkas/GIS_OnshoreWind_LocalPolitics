@@ -1,6 +1,6 @@
 # Correlation Analysis: Onshore Wind Expansion & Local Voting Behavior
 
-## Description {#description}
+## Description
 
 The project aims to examine a possible correlation between the onshore wind expansion as part of the ongoing energy transition AND voting behavior on municipality level representing the local political orientation. Average wind speeds and land use patterns are also recognized and included in the analysis.
 
@@ -10,7 +10,7 @@ The project aims to examine a possible correlation between the onshore wind expa
 -   [Data](#data)
 -   [Installation](#installation)
 
-## Data {#data}
+## Data
 
 Vector:
 
@@ -28,7 +28,7 @@ Raster:
 
 The raster data is too large to store in Github and must be therefore downloaded manually.
 
-## Installation {#installation}
+## Installation 
 
 The necessary libraries are stored in renv and should be automatically activated when opening the project. To run the project files it is only necessary to execute the first chunk in the Final_Report.Rmd file. From there all the R files should complete in approximate time of 10 to 20 minutes.
 
